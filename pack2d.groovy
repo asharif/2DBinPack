@@ -15,7 +15,7 @@ packIt(bin, box)
 def stopTime = System.currentTimeMillis()
 
 def calcTime = stopTime - startTime
-println "fount $fitCount fits in $calcTime ms"
+println "found $fitCount fits in $calcTime ms"
 
 
 def packIt(bin, box) {
@@ -37,8 +37,6 @@ def packIt(bin, box) {
       		box.h = tmpw
        	}
 		
-	//println "sorted bin: $bin.w x $bin.h, sorted box: $box.w x $box.h"
-	//println "bin type: $bin.t bin size: $bin.w x $bin.h"
 
 	if(box.w <= bin.w && box.h <= bin.h) {
 			
@@ -80,48 +78,5 @@ def splitBin(bin, box) {
 
 
 }
-
-
-
-/*
-//draw bin
-
-String[][]  graph = new String[bin[1] as int][bin[0] as int]
-
-for (def i=0; i < (bin[1] as int) ;i++) {
-
-	//graph[i][0] = '-'
-
-	for( def j=0; j < (bin[0] as int); j++) {
-
-		graph[i][j] = '|'
-		print graph[i][j]
-	}
-
-	println ''
-	
-}
-
-
-
-
-//draw box
-
-String[][]  graph2 = new String[box[1] as int][box[0] as int]
-
-for (def i=0; i < (box[1] as int) ;i++) {
-
-        //graph[i][0] = '-'
-
-        for( def j=0; j < (box[0] as int); j++) {
-
-                graph2[i][j] = '*'
-        	print graph2[i][j]
-	}
-
-	println ''
-
-}
-*/
 
 
