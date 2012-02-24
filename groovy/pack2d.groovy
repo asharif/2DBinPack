@@ -1,7 +1,7 @@
 
 
 
-def bin =  [ x:0, y:0, w: args[0].split(',')[0] as int, h: args[0].split(',')[1] as int, sbind: null, sbinr:null, t: 'root', used: false ]
+def bin =  [ x:0, y:0, w: args[0].split(',')[0] as int, h: args[0].split(',')[1] as int, sbind: null, sbinr:null, t: 'root' ]
 
 def box =  [ x:0, y:0, w: args[1].split(',')[0] as int , h: args[1].split(',')[1] as int]
 
@@ -41,8 +41,6 @@ def packIt(bin, box) {
 	if(box.w <= bin.w && box.h <= bin.h) {
 			
 		fitCount++
-		//set this bin as used
-		bin.used = true
 
 		//if it fits split box and recurse
 		splitBin(bin, box)
@@ -62,7 +60,7 @@ def splitBin(bin, box) {
 	def sbindW = bin.w
 	def sbindH = bin.h - box.h
 
-	if ( sbindW == 0 || sbindH == 0 )
+	if ( sbindH == 0 )
 		bin.sbind = null
 	else
 		bin.sbind = [ x: bin.x, y: bin.y + box.h, w: sbindW, h: sbindH , t: 'd']
@@ -71,7 +69,7 @@ def splitBin(bin, box) {
 	def sbinrH = box.h
 
 	
-	if ( sbinrW == 0 || sbinrH == 0 )
+	if ( sbinrW == 0 )
 		bin.sbinr = null
 	else
 		bin.sbinr = [ x: bin.x + box.w, y: bin.y, w: sbinrW, h: sbinrH , t: 'r']
