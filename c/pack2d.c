@@ -29,7 +29,7 @@ void getSizeVector(char size[], int sizeV[], char *del )
 
         while ( pchar != NULL)
         {
-                sizeV[i] = *pchar - '0';
+                sizeV[i] = atoi(pchar);
                 i++;
                 pchar = strtok ( NULL, del );
 
