@@ -3,26 +3,33 @@ public class  pack2d {
 	
 	public static class shape {
 		
-		int w;
-		int h;
+		float w;
+		float h;
 		shape d;
 		shape r;
 	}
 
 	private static int fitCount = 0;
-
+	private static float tolKerf;
 
 	public static void main(String[] args) {
+
+		if ( args.length < 3 ) {
+			System.out.println("3 arguments required: bin size (eg. 5x5), box size (eg. 1x1) and tol+kerf (eg 1.25)");
+			System.exit(1);
+		}
 
 		shape bin = new shape();
 		shape box = new shape();
 		
-		bin.w = Integer.parseInt(args[0].split(",")[0]);
-		bin.h = Integer.parseInt(args[0].split(",")[1]);
+		bin.w = Float.parseFloat(args[0].split("x")[0]);
+		bin.h = Float.parseFloat(args[0].split("x")[1]);
 
-		box.w = Integer.parseInt(args[1].split(",")[0]);
-		box.h = Integer.parseInt(args[1].split(",")[1]);
+		box.w = Float.parseFloat(args[1].split("x")[0]);
+		box.h = Float.parseFloat(args[1].split("x")[1]);
 		
+		tolKerf = Float.parseFloat(args[2]);
+
 		long start = System.currentTimeMillis();
 		
 		packIt(bin, box);
@@ -40,7 +47,7 @@ public class  pack2d {
 		//sort both bin and box
 		if ( bin.w < bin.h) {
 
-		        int tmpw = bin.w;
+		        float tmpw = bin.w;
 		        bin.w = bin.h;
 		        bin.h = tmpw;
 		}
@@ -48,7 +55,7 @@ public class  pack2d {
 
 		if ( box.w < box.h) {
 
-		        int tmpw = box.w;
+		        float tmpw = box.w;
 		        box.w = box.h;
 		        box.h = tmpw;
 		}
@@ -72,8 +79,8 @@ public class  pack2d {
 	
 	private static void splitBin(shape bin, shape box) {
 
-		int dW = bin.w;
-		int dH = bin.h - box.h;
+		float dW = bin.w;
+		float dH = bin.h - box.h - tolKerf;
 
 		if ( dH == 0 )
 		        bin.d = null;
@@ -87,8 +94,8 @@ public class  pack2d {
 		}
 
 		
-		int rW = bin.w - box.w;
-		int rH = box.h;
+		float rW = bin.w - box.w -tolKerf;
+		float rH = box.h;
 
 
 		if ( rW == 0 )

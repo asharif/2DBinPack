@@ -25,6 +25,7 @@ many boxes  of that size fit in the bin
 
 I used it for figuring how to cut material with least amount of waste
 
-run it:
+run it (groovy):
 
-groovy pack2d.groovy 5,5 1,1
+groovy pack2d.groovy 5x5 1x1 .25
+

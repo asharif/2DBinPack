@@ -1,12 +1,19 @@
 
 
+if(args.length < 3) {
+	
+	println"3 arguments required: bin size (eg. 5x5), box size (eg. 1x1) and tol+kerf (eg 1.25)"
+	return;
+}
 
-def bin =  [ x:0, y:0, w: args[0].split(',')[0] as int, h: args[0].split(',')[1] as int, sbind: null, sbinr:null, t: 'root' ]
+def bin =  [  w: args[0].split('x')[0] as float, h: args[0].split('x')[1] as float, d: null, r:null ]
 
-def box =  [ x:0, y:0, w: args[1].split(',')[0] as int , h: args[1].split(',')[1] as int]
+def box =  [  w: args[1].split('x')[0] as float , h: args[1].split('x')[1] as float]
+
+
 
 fitCount =0
-
+tolKerf = args[2] as float
 
 def startTime = System.currentTimeMillis()
 
@@ -44,10 +51,10 @@ def packIt(bin, box) {
 
 		//if it fits split box and recurse
 		splitBin(bin, box)
-		if ( bin.sbind != null )
-			packIt(bin.sbind, box)
-		if( bin.sbinr != null )
-			packIt(bin.sbinr, box)
+		if ( bin.d != null )
+			packIt(bin.d, box)
+		if( bin.r != null )
+			packIt(bin.r, box)
 			
 	}
 	
@@ -57,22 +64,22 @@ def packIt(bin, box) {
 
 def splitBin(bin, box) {
 
-	def sbindW = bin.w
-	def sbindH = bin.h - box.h
+	def dW = bin.w
+	def dH = bin.h - box.h -tolKerf
 
-	if ( sbindH == 0 )
-		bin.sbind = null
+	if ( dH == 0 )
+		bin.d = null
 	else
-		bin.sbind = [ x: bin.x, y: bin.y + box.h, w: sbindW, h: sbindH , t: 'd']
+		bin.d = [ w: dW, h: dH]
 	
-	def sbinrW = bin.w - box.w
-	def sbinrH = box.h
+	def rW = bin.w - box.w - tolKerf
+	def rH = box.h
 
 	
-	if ( sbinrW == 0 )
-		bin.sbinr = null
+	if ( rW == 0 )
+		bin.r = null
 	else
-		bin.sbinr = [ x: bin.x + box.w, y: bin.y, w: sbinrW, h: sbinrH , t: 'r']
+		bin.r = [  w: rW, h: rH ]
 
 
 }
