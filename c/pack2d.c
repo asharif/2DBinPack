@@ -5,19 +5,18 @@
 
 struct shape
 {
-	int w;
-	int h;
+	float w;
+	float h;
 	struct shape *r;
 	struct shape *d;
 
 };
 
 int fitCount = 0;
+float tolKerf;
 
 
-
-
-void getSizeVector(char size[], int sizeV[], char *del )
+void getSizeVector(char size[], float sizeV[], char *del )
 {
 
 
@@ -29,7 +28,7 @@ void getSizeVector(char size[], int sizeV[], char *del )
 
         while ( pchar != NULL)
         {
-                sizeV[i] = atoi(pchar);
+                sizeV[i] = atof(pchar);
                 i++;
                 pchar = strtok ( NULL, del );
 
@@ -39,10 +38,11 @@ void getSizeVector(char size[], int sizeV[], char *del )
 
 }
 
+
 void splitBin(struct shape *bin, struct shape *box) {
 
-        int dW = bin->w;
-        int dH = bin->h - box->h;
+        float dW = bin->w;
+        float dH = bin->h - box->h - tolKerf;
 	
 	if ( dH == 0 )
                 bin->d = NULL;
@@ -57,8 +57,8 @@ void splitBin(struct shape *bin, struct shape *box) {
 	}
 
 
-        int rW = bin->w - box->w;
-        int rH = box->h;
+        float rW = bin->w - box->w - tolKerf;
+        float rH = box->h;
 
 
         if ( rW == 0 )
@@ -84,7 +84,7 @@ void packIt( struct shape *bin, struct shape *box)
         if ( bin->w < bin->h ) 
 	{
 
-                int tmpw = bin->w;
+                float tmpw = bin->w;
                 bin->w = bin->h;
                 bin->h = tmpw;
         }
@@ -93,7 +93,7 @@ void packIt( struct shape *bin, struct shape *box)
         if ( box->w < box->h ) 
 	{
 
-                int tmpw = box->w;
+                float tmpw = box->w;
                 box->w = box->h;
                 box->h = tmpw;
         }
@@ -128,11 +128,19 @@ void packIt( struct shape *bin, struct shape *box)
 main(int argc, char * argv[])
 {
 
-	int binSizeV[2];
-	int boxSizeV[2];
+	if ( argc < 4 )
+	{
+		printf("3 arguments required: bin size (eg. 5x5), box size (eg. 1x1) and tol+kerf (eg 1.25)\n");
+		exit(1);
 
-	getSizeVector(argv[1], binSizeV, ",");
-	getSizeVector(argv[2], boxSizeV, ",");	
+	}
+	
+	float binSizeV[2];
+	float boxSizeV[2];
+
+	tolKerf = atof(argv[3]);
+	getSizeVector(argv[1], binSizeV, "x");
+	getSizeVector(argv[2], boxSizeV, "x");	
 
 	struct shape *bin;
 	struct shape *box;
@@ -163,7 +171,6 @@ main(int argc, char * argv[])
         long execTimeMicS = end.tv_usec  - start.tv_usec ;
 
         float fexecTime = (execTimeS*1000) + ((float)execTimeMicS)/1000;
-
 
 	printf("found %d fits in %f ms\n", fitCount, fexecTime);
 }	
