@@ -108,9 +108,15 @@ void packIt( struct shape *bin, struct shape *box)
                 splitBin( bin, box );
 		
 		if ( bin->d != NULL )
+		{
                         packIt( bin->d, box );
-                if( bin->r != NULL )
+                	free ( bin->d );
+		}
+		if( bin->r != NULL )
+		{
                         packIt( bin->r, box );
+			free ( bin->r );
+		}
 
         }
 
@@ -146,6 +152,10 @@ main(int argc, char * argv[])
 	gettimeofday(&start);
 	
 	packIt(bin, box);
+
+
+	free ( bin );
+	free ( box );
 
 	gettimeofday(&end);
 	
