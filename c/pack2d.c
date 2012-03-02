@@ -2,19 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<time.h>
-
-struct shape
-{
-	float w;
-	float h;
-	struct shape *r;
-	struct shape *d;
-
-};
-
-int fitCount = 0;
-float tolKerf;
-
+#include"libpack2d.h"
 
 void getSizeVector(char size[], float sizeV[], char *del )
 {
@@ -38,93 +26,6 @@ void getSizeVector(char size[], float sizeV[], char *del )
 
 }
 
-
-void splitBin(struct shape *bin, struct shape *box) {
-
-        float dW = bin->w;
-        float dH = bin->h - box->h - tolKerf;
-	
-	if ( dH == 0 )
-                bin->d = NULL;
-        else
-	{
-		struct shape *binD;
-		binD = ( struct shape *) malloc(sizeof( struct shape ) );
-		binD->w = dW;
-		binD->h = dH;
-		bin->d = binD;
-
-	}
-
-
-        float rW = bin->w - box->w - tolKerf;
-        float rH = box->h;
-
-
-        if ( rW == 0 )
-                bin->r = NULL;
-        else
-	{
-
-		struct shape *binR;
-		binR = ( struct shape *) malloc( sizeof ( struct shape ) );
-		binR->w = rW;
-		binR->h = rH;
-		bin->r = binR;
-	}
-
-
-}
-
-
-void packIt( struct shape *bin, struct shape *box)
-{
-	
-	//sort both bin and box
-        if ( bin->w < bin->h ) 
-	{
-
-                float tmpw = bin->w;
-                bin->w = bin->h;
-                bin->h = tmpw;
-        }
-
-
-        if ( box->w < box->h ) 
-	{
-
-                float tmpw = box->w;
-                box->w = box->h;
-                box->h = tmpw;
-        }
-
-
-        if( box->w <= bin->w && box->h <= bin->h ) 
-	{
-
-                fitCount++;
-
-                //if it fits split box and recurse
-                splitBin( bin, box );
-		
-		if ( bin->d != NULL )
-		{
-                        packIt( bin->d, box );
-                	free ( bin->d );
-		}
-		if( bin->r != NULL )
-		{
-                        packIt( bin->r, box );
-			free ( bin->r );
-		}
-
-        }
-
-
-}
-
-
-
 main(int argc, char * argv[])
 {
 
@@ -138,14 +39,14 @@ main(int argc, char * argv[])
 	float binSizeV[2];
 	float boxSizeV[2];
 
-	tolKerf = atof(argv[3]);
+	PACK2D_tolKerf = atof(argv[3]);
 	getSizeVector(argv[1], binSizeV, "x");
 	getSizeVector(argv[2], boxSizeV, "x");	
 
-	struct shape *bin;
-	struct shape *box;
-	bin = ( struct shape * ) malloc(sizeof( struct shape ));
-	box = ( struct shape *) malloc(sizeof( struct shape ) );
+	struct PACK2D_shape *bin;
+	struct PACK2D_shape *box;
+	bin = ( struct PACK2D_shape * ) malloc(sizeof( struct PACK2D_shape ));
+	box = ( struct PACK2D_shape *) malloc(sizeof( struct PACK2D_shape ) );
 
 	bin->w = binSizeV[0];
 	bin->h = binSizeV[1];
@@ -159,7 +60,7 @@ main(int argc, char * argv[])
 	
 	gettimeofday(&start);
 	
-	packIt(bin, box);
+	PACK2D_packIt(bin, box);
 
 
 	free ( bin );
@@ -172,5 +73,5 @@ main(int argc, char * argv[])
 
         float fexecTime = (execTimeS*1000) + ((float)execTimeMicS)/1000;
 
-	printf("found %d fits in %f ms\n", fitCount, fexecTime);
+	printf("found %d fits in %f ms\n", PACK2D_fitCount, fexecTime);
 }	
