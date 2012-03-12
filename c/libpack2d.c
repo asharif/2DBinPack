@@ -14,7 +14,7 @@ void PACK2D_splitBin(struct PACK2D_shape *bin, struct PACK2D_shape *box) {
         float dW = bin->w;
         float dH = bin->h - box->h - PACK2D_tolKerf;
 	
-	if ( dH == 0 )
+	if ( dH <= 0 )
                 bin->d = NULL;
         else
 	{
@@ -31,7 +31,7 @@ void PACK2D_splitBin(struct PACK2D_shape *bin, struct PACK2D_shape *box) {
         float rH = box->h;
 
 
-        if ( rW == 0 )
+        if ( rW <= 0 )
                 bin->r = NULL;
         else
 	{

@@ -82,7 +82,7 @@ public class  pack2d {
 		float dW = bin.w;
 		float dH = bin.h - box.h - tolKerf;
 
-		if ( dH == 0 )
+		if ( dH <= 0 )
 		        bin.d = null;
 		else {
 
@@ -98,7 +98,7 @@ public class  pack2d {
 		float rH = box.h;
 
 
-		if ( rW == 0 )
+		if ( rW <= 0 )
 		        bin.r = null;
 		else {
 
