@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<time.h>
+//#include<time.h>
 #include"libpack2d.h"
 
 void getSizeVector(char size[], float sizeV[], char *del )
@@ -55,10 +55,10 @@ main(int argc, char * argv[])
 	box->w = boxSizeV[0];
 	box->h = boxSizeV[1];
 
-	struct timeval start;
-	struct timeval end;
+//	struct timeval start;
+//	struct timeval end;
 	
-	gettimeofday(&start);
+//	gettimeofday(&start);
 	
 	PACK2D_packIt(bin, box);
 
@@ -66,12 +66,14 @@ main(int argc, char * argv[])
 	free ( bin );
 	free ( box );
 
-	gettimeofday(&end);
+//	gettimeofday(&end);
 	
-	long execTimeS = end.tv_sec - start.tv_sec;
-        long execTimeMicS = end.tv_usec  - start.tv_usec ;
+//	long execTimeS = end.tv_sec - start.tv_sec;
+//      long execTimeMicS = end.tv_usec  - start.tv_usec ;
 
-        float fexecTime = (execTimeS*1000) + ((float)execTimeMicS)/1000;
+//      float fexecTime = (execTimeS*1000) + ((float)execTimeMicS)/1000;
 
-	printf("found %d fits in %f ms\n", PACK2D_fitCount, fexecTime);
+//	printf("found %d fits in %f ms\n", PACK2D_fitCount, fexecTime);
+	printf("found %d fits\n", PACK2D_fitCount);
+
 }	

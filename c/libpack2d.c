@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<time.h>
 #include"libpack2d.h"
 
 
@@ -116,10 +115,7 @@ int PACK2D_getCount(float binsize1, float binsize2, float boxsize1, float boxsiz
 	box->w = boxsize1;
 	box->h = boxsize2;
 
-	struct timeval start;
-	struct timeval end;
-	
-	
+
 	PACK2D_packIt(bin, box);
 
 
