@@ -1,18 +1,15 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<time.h>
 #include"libpack2d.h"
 
 
 int PACK2D_fitCount;
-float PACK2D_tolKerf;
-
 
 void PACK2D_splitBin(struct PACK2D_shape *bin, struct PACK2D_shape *box) {
 
-        float dW = bin->w;
-        float dH = bin->h - box->h - PACK2D_tolKerf;
+        float dW = bin->w->size;
+        float dH = bin->h->size - box->h->size - bin->h->tk;
 	
 	if ( dH <= 0 )
                 bin->d = NULL;
@@ -20,15 +17,23 @@ void PACK2D_splitBin(struct PACK2D_shape *bin, struct PACK2D_shape *box) {
 	{
 		struct PACK2D_shape *binD;
 		binD = ( struct PACK2D_shape *) malloc(sizeof( struct PACK2D_shape ) );
-		binD->w = dW;
-		binD->h = dH;
+		binD->w = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+		binD->w->size = dW;
+		binD->w->origSide = bin->w->origSide;
+		binD->w->tk = bin->w->tk;
+
+		binD->h = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+		binD->h->size = dH;
+		binD->h->origSide = bin->h->origSide;
+		binD->h->tk = bin->h->tk;
+		
 		bin->d = binD;
 
 	}
 
 
-        float rW = bin->w - box->w - PACK2D_tolKerf;
-        float rH = box->h;
+        float rW = bin->w->size - box->w->size - bin->w->tk;
+        float rH = box->h->size;
 
 
         if ( rW <= 0 )
@@ -38,8 +43,18 @@ void PACK2D_splitBin(struct PACK2D_shape *bin, struct PACK2D_shape *box) {
 
 		struct PACK2D_shape *binR;
 		binR = ( struct PACK2D_shape *) malloc( sizeof ( struct PACK2D_shape ) );
-		binR->w = rW;
-		binR->h = rH;
+
+		binR = ( struct PACK2D_shape *) malloc(sizeof( struct PACK2D_shape ) );
+		binR->w = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+		binR->w->size = rW;
+		binR->w->origSide = bin->w->origSide;
+		binR->w->tk = bin->w->tk;
+
+		binR->h = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+		binR->h->size = rH;
+		binR->h->origSide = bin->h->origSide;
+		binR->h->tk = bin->h->tk;
+
 		bin->r = binR;
 	}
 
@@ -51,25 +66,26 @@ void PACK2D_packIt( struct PACK2D_shape *bin, struct PACK2D_shape *box)
 {
 	
 	//sort both bin and box
-        if ( bin->w < bin->h ) 
+        if ( bin->w->size < bin->h->size ) 
 	{
 
-                float tmpw = bin->w;
+                struct PACK2D_side *tmpw = bin->w;
                 bin->w = bin->h;
                 bin->h = tmpw;
         }
 
 
-        if ( box->w < box->h ) 
+        if ( box->w->size < box->h->size ) 
 	{
 
-                float tmpw = box->w;
+                struct PACK2D_side *tmpw = box->w;
                 box->w = box->h;
                 box->h = tmpw;
         }
 
 
-        if( box->w <= bin->w && box->h <= bin->h ) 
+	
+        if( box->w->size <= bin->w->size && box->h->size <= bin->h->size ) 
 	{
 
                 PACK2D_fitCount++;
@@ -96,34 +112,47 @@ void PACK2D_packIt( struct PACK2D_shape *bin, struct PACK2D_shape *box)
 
 
 
-int PACK2D_getCount(float binsize1, float binsize2, float boxsize1, float boxsize2, float tk)
+int PACK2D_getCount(float binsize1, float binsize2, float boxsize1, float boxsize2, 
+		    float tkw, float tkh )
 {
 
 	
 	PACK2D_fitCount = 0;
 
-	PACK2D_tolKerf = tk;
 
 	struct PACK2D_shape *bin;
 	struct PACK2D_shape *box;
 	bin = ( struct PACK2D_shape * ) malloc(sizeof( struct PACK2D_shape ));
 	box = ( struct PACK2D_shape *) malloc(sizeof( struct PACK2D_shape ) );
 
-	bin->w = binsize1;
-	bin->h = binsize2;
+	bin->w = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+	bin->w->size = binsize1;
+	bin->w->origSide = 'w';
+	bin->w->tk = tkw;
+
+	bin->h = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+	bin->h->size = binsize2;
+	bin->h->origSide = 'h';
+	bin->h->tk = tkh;
+
 	bin->d = NULL;
 	bin->r = NULL;
-	box->w = boxsize1;
-	box->h = boxsize2;
+	
+	box->w = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+	box->w->size = boxsize1;
+	box->w->origSide = 'w';
 
-	struct timeval start;
-	struct timeval end;
-	
-	
+	box->h = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
+	box->h->size = boxsize2;
+	box->h->origSide = 'h';
 	PACK2D_packIt(bin, box);
 
 
+	free ( bin->w );
+	free ( bin->h );
 	free ( bin );
+	free ( box->w );
+	free ( box->h );
 	free ( box );
 	
 

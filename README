@@ -29,3 +29,8 @@ run it (groovy):
 
 groovy pack2d.groovy 5x5 1x1 .25
 
+
+there are also c and java versions.  
+
+***NOTE*** only c and java versions allow for diff side tol+kerf
+
