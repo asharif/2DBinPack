@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<time.h>
 #include"libpack2d.h"
 
 void getSizeVector(char size[], float sizeV[], char *del )
@@ -71,7 +70,7 @@ main(int argc, char * argv[])
 	box->h->origSide = 'h';
 
 	
-	
+
 	PACK2D_packIt(bin, box);
 
 

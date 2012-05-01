@@ -145,6 +145,7 @@ int PACK2D_getCount(float binsize1, float binsize2, float boxsize1, float boxsiz
 	box->h = ( struct PACK2D_side *) malloc(sizeof( struct PACK2D_side ) );
 	box->h->size = boxsize2;
 	box->h->origSide = 'h';
+
 	PACK2D_packIt(bin, box);
 
 
